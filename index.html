@@ -30,9 +30,9 @@
     }
     #ia25 {
       margin-top: 0px;
-      margin-right: 458.8px;
+      margin-right: auto;
       margin-bottom: 76px;
-      margin-left: 458.8px;
+      margin-left: auto;
       padding-top: 40px;
       padding-right: 45px;
       padding-bottom: 33px;
@@ -51,10 +51,6 @@
     }
     #ine1h {
       padding: 10px;
-      padding-top: 10px;
-      padding-right: 10px;
-      padding-bottom: 12px;
-      padding-left: 10px;
     }
     #i6pqg {
       padding: 10px;
@@ -65,6 +61,58 @@
     #ifs7u {
       padding: 10px;
     }
+    .scripts-section {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f4f4f4;
+      border-radius: 8px;
+    }
+    .scripts-section h3 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+    .script-item {
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #fff;
+      overflow: hidden;
+    }
+    .script-header {
+      padding: 10px 15px;
+      background: #eee;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .script-header:hover {
+      background: #e2e2e2;
+    }
+    .script-content {
+      display: none;
+      padding: 10px;
+      background: #1e1e1e;
+    }
+    .script-content textarea {
+      width: 100%;
+      height: 120px;
+      background: #1e1e1e;
+      color: #dcdcdc;
+      border: none;
+      font-family: monospace;
+      font-size: 13px;
+      resize: vertical;
+      padding: 5px;
+    }
+    .path-label {
+      font-size: 11px;
+      color: #666;
+      font-family: monospace;
+      margin-bottom: 5px;
+    }
   </style>
 </head>
 
@@ -72,28 +120,77 @@
   <header class="head" id="ipsg"></header>
   <div class="card" id="ia25">
     <div class="gjs-image-box" id="i6d2y"></div>
-    <div id="ine1h">HELLO this is my
-      <br/>website<br/>also i use GrapesJS to make this website<br/>but i am still working on this<br/>for right now
+    <div id="ine1h">Hello this is my website<br/>i just set up my github acount again<br/> i made this with GrapesJS
     </div>
-    <div id="i6pqg">also my disord account is <div role="button" tabindex="0" class="clickable__26b1f">
-        <div class="info_f4bc97 userTag__26b1f text-sm/normal__26b1f" id="ir0e3">
-          <div role="button" tabindex="0" class="clickable__26b1f">
-            <div class="info_f4bc97 userTag__26b1f text-sm/normal__26b1f" id="ie9ts">
-              <span class="userTagUsername__26b1f"></span></div>
-          </div>
-          <div aria-hidden="true" id="i6jji" class="dotSpacer__26b1f"><br/>
-            <div id="iwftz">
-              <div role="button" tabindex="0" class="clickable__26b1f">
-                <div class="info_f4bc97 userTag__26b1f text-sm/normal__26b1f">
-                  <span class="userTagUsername__26b1f">nullorami_66620</span></div>
-              </div><br/>
-            </div>
-          </div>
-        </div>
+    <div id="i6pqg">my discord account 
+      <div id="iwftz" style="display:inline;">
+        <span class="userTagUsername__26b1f">nullorami_66620</span>
       </div>
     </div>
-    <div id="ifs7u">anyway i still editing this page<br/><br/></div>
+
+    <div class="scripts-section">
+      <h3>here is all of my Tampermonkey project and other </h3>
+      <div id="scriptsContainer"></div>
+    </div>
+
+    <div id="ifs7u">i still editing this page<br/><br/></div>
   </div>
+
+  <script>
+    const scriptsList = [
+      ["test.txt", "test1 for now"],
+      ["test.txt", "test2 for now"],
+      ["test.txt", "test 3for now"]
+    ];
+
+    const container = document.getElementById('scriptsContainer');
+
+    scriptsList.forEach((item, index) => {
+      const filePath = item[0];
+      const scriptName = item[1];
+      const scriptId = "script_" + index;
+
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'script-item';
+
+      itemDiv.innerHTML = `
+        <div class="script-header" onclick="toggleScript('${scriptId}')">
+          <span>${scriptName}</span>
+          <span>&#9660;</span>
+        </div>
+        <div class="script-content" id="${scriptId}">
+          <div class="path-label">${filePath}</div>
+          <textarea readonly data-src="${filePath}">who let the dog out...</textarea>
+        </div>
+      `;
+
+      container.appendChild(itemDiv);
+    });
+
+    function toggleScript(id) {
+      const el = document.getElementById(id);
+      if (el.style.display === "block") {
+        el.style.display = "none";
+      } else {
+        el.style.display = "block";
+        const textarea = el.querySelector('textarea');
+        const filePath = textarea.getAttribute('data-src');
+        if (textarea.value === "loading file content...") {
+          fetch(filePath)
+            .then(response => {
+              if (!response.ok) throw new Error("failed to load file");
+              return response.text();
+            })
+            .then(data => {
+              textarea.value = data;
+            })
+            .catch(error => {
+              textarea.value = "error loading external file: " + filePath;
+            });
+        }
+      }
+    }
+  </script>
 </body>
 
 </html>
