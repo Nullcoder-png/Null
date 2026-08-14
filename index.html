@@ -138,9 +138,9 @@
 
   <script>
     const scriptsList = [
-      ["./test.txt", "test1 for now"],
-      ["./test.txt", "test2 for now"],
-      ["./test.txt", "test 3for now"]
+      ["test.txt", "test1 for now"],
+      ["test.txt", "test2 for now"],
+      ["test.txt", "test 3for now"]
     ];
 
     const container = document.getElementById('scriptsContainer');
@@ -167,7 +167,7 @@
       container.appendChild(itemDiv);
     });
 
-    function toggleScript(id) {
+function toggleScript(id) {
       const el = document.getElementById(id);
       if (el.style.display === "block") {
         el.style.display = "none";
@@ -175,7 +175,7 @@
         el.style.display = "block";
         const textarea = el.querySelector('textarea');
         const filePath = textarea.getAttribute('data-src');
-        if (textarea.value === "loading file content...") {
+        if (textarea.value === "who let the dog out...") {
           fetch(filePath)
             .then(response => {
               if (!response.ok) throw new Error("failed to load file");
