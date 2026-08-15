@@ -130,44 +130,55 @@
 
     <div class="scripts-section">
       <h3>here is all of my  project and other <h3>
-      <div id="scriptsContainer"></div>
+      <div id="scriptsContainer">loading...</div>
     </div>
 
     <div id="ifs7u">i still editing this page<br/>about me i like to make cheats for game i am ban from 25 out of my 28 games for making cheats and ban from 8 server lol but i has start to try to mod web games<br/></div>
   </div>
 
   <script>
-    const scriptsList = [
-      ["test.txt", "test1 for now"],
-      ["test.txt", "test2 for now"],
-      ["test.txt", "test 3for now"]
-    ];
+    fetch('main.txt')
+      .then(response => {
+        if (!response.ok) throw new Error("Null forgot to add main.txt");
+        return response.text();
+      })
+      .then(textData => {
+        const container = document.getElementById('scriptsContainer');
+        container.innerHTML = '';
 
-    const container = document.getElementById('scriptsContainer');
+        const lines = textData.split('\n');
+        lines.forEach((line, index) => {
+          const trimmed = line.trim();
+          if (!trimmed) return;
+          const match = trimmed.match(/\("([^"]+)"\s*,\s*"([^"]+)"\)/);
+          if (!match) return;
 
-    scriptsList.forEach((item, index) => {
-      const filePath = item[0];
-      const scriptName = item[1];
-      const scriptId = "script_" + index;
+          const filePath = match[1];
+          const scriptName = match[2];
+          const scriptId = "script_" + index;
 
-      const itemDiv = document.createElement('div');
-      itemDiv.className = 'script-item';
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'script-item';
 
-      itemDiv.innerHTML = `
-        <div class="script-header" onclick="toggleScript('${scriptId}')">
-          <span>${scriptName}</span>
-          <span>&#9660;</span>
-        </div>
-        <div class="script-content" id="${scriptId}">
-          <div class="path-label">${filePath}</div>
-          <textarea readonly data-src="${filePath}">who let the dog out...</textarea>
-        </div>
-      `;
+          itemDiv.innerHTML = `
+            <div class="script-header" onclick="toggleScript('${scriptId}')">
+              <span>${scriptName}</span>
+              <span>&#9660;</span>
+            </div>
+            <div class="script-content" id="${scriptId}">
+              <div class="path-label">${filePath}</div>
+              <textarea readonly data-src="${filePath}">who let the dog out...</textarea>
+            </div>
+          `;
 
-      container.appendChild(itemDiv);
-    });
+          container.appendChild(itemDiv);
+        });
+      })
+      .catch(error => {
+        document.getElementById('scriptsContainer').innerText = "error loading main.txt";
+      });
 
-function toggleScript(id) {
+    function toggleScript(id) {
       const el = document.getElementById(id);
       if (el.style.display === "block") {
         el.style.display = "none";
@@ -194,3 +205,4 @@ function toggleScript(id) {
 </body>
 
 </html>
+```[cite: 4]
